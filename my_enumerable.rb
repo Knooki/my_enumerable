@@ -6,26 +6,24 @@ require 'set'
 
 # extension with my methods for Array class
 module MyEnumerable
-  def my_all?(value = nil)
-    i = 0
-    if !value.nil?
-      while i < size
-        return false unless self[i] == value
-
-        i += 1
+  def my_all?(pattern = nil)
+    # all? [{|obj| block} ] → true or false
+    # all?(pattern) → true or false
+    case
+    when block_given? && pattern.nil?   # {}
+      each do |item|
+        return false unless yield(item)
       end
-    elsif block_given?
-      while i < size
-        return false unless yield(self[i])
-
-        i += 1
+    when !pattern.nil? && !block_given? # ()
+      each do |item|
+        return false unless pattern === item
       end
-    else
-      while i < size
-        return false unless self[i]
-
-        i += 1
+    when pattern.nil? && !block_given?  # empty
+      each do |item|
+        return false unless item 
       end
+    else                               # () {}
+        raise StandardError.new 'Expected one parameter: either pattern, either block'
     end
     true
   end
@@ -85,13 +83,13 @@ module MyEnumerable
         self[i] = value
         i += 1
       end
-      return self
+      self
     elsif block_given?
       while i < size
         yield(self[i])
         i += 1
       end
-      return self
+      self
     else
       while i < size
         p "Current number is #{self[i]}"
@@ -101,7 +99,7 @@ module MyEnumerable
   end
 
   def my_include?(arr)
-    self.to_set.superset?(arr.to_set)
+    to_set.superset?(arr.to_set)
   end
 
   def my_map(value = nil)
@@ -168,104 +166,103 @@ module MyEnumerable
     i = 0
     if !value.nil?
       while i < size
-        return self[i] if self[i]==value
+        return self[i] if self[i] == value
 
-      i+=1
+        i += 1
       end
     elsif block_given?
       while i < size
         return self[i] if yield(self[i])
 
-      i+=1
+        i += 1
       end
     else
-      p "No condition given"
+      p 'No condition given'
     end
   end
 
   def my_find_all(value = nil)
     i = 0
     result = []
-  if !value.nil?
-    while i < size
-      result.append(self[i]) if self[i]==value
+    if !value.nil?
+      while i < size
+        result.append(self[i]) if self[i] == value
 
-      i+=1
-    end
-  elsif block_given?
-    while i < size
-      result.append(self[i]) if yield(self[i])
+        i += 1
+      end
+    elsif block_given?
+      while i < size
+        result.append(self[i]) if yield(self[i])
 
-    i+=1
+        i += 1
+      end
+    else
+      p 'No condition given'
     end
-  else
-    p "No condition given"
-  end
-  result
+    result
   end
 
   def my_find_index(value = nil)
     i = 0
     if !value.nil?
       while i < size
-        return i if self[i]==value
+        return i if self[i] == value
 
-      i+=1
+        i += 1
       end
     elsif block_given?
       while i < size
         return i if yield(self[i])
 
-      i+=1
+        i += 1
       end
     else
-      p "No condition given"
+      p 'No condition given'
     end
   end
 
   def my_reject(value = nil)
     i = 0
     result = self
-  if !value.nil?
-    while i < size
-      result.delete_at(i) if self[i]==value
+    if !value.nil?
+      while i < size
+        result.delete_at(i) if self[i] == value
 
-      i+=1
+        i += 1
+      end
+    elsif block_given?
+      while i < size
+        result.delete_at(i) if yield(self[i])
+
+        i += 1
+      end
+    else
+      p 'No condition given'
     end
-  elsif block_given?
-    while i < size
-      result.delete_at(i) if yield(self[i])
-
-    i+=1
-    end
-  else
-    p "No condition given"
-  end
-  result
+    result
   end
 
-  def my_min()
+  def my_min
     min_el = self[0]
     i = 1
-    while i < size 
+    while i < size
       min_el = self[i] if min > self[i]
-    
-      i+=1
+
+      i += 1
     end
     min_el
   end
 
-  def my_max()
+  def my_max
     max_el = self[0]
     i = 1
-    while i < size 
+    while i < size
       max_el = self[i] if min < self[i]
-    
-      i+=1
+
+      i += 1
     end
     max_el
   end
-
 end
 
 class Array
