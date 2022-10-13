@@ -90,6 +90,7 @@ module MyEnumerable
   end
 
   def my_include?(arr)
+    #include?(object) → true or false
     to_set.superset?(arr.to_set)
   end
 
