@@ -153,42 +153,35 @@ module MyEnumerable
     result
   end
 
-  def my_find(value = nil)
-    i = 0
-    if !value.nil?
-      while i < size
-        return self[i] if self[i] == value
+  # def my_find(ifnone = nil)
+  #   # enum.find(ifnone = nil)   {| obj | block }  => obj or nil
+  #   if !value.nil?
+  #     while i < size
+  #       return self[i] if self[i] == value
 
-        i += 1
-      end
-    elsif block_given?
-      while i < size
-        return self[i] if yield(self[i])
+  #       i += 1
+  #     end
+  #   elsif block_given?
+  #     while i < size
+  #       return self[i] if yield(self[i])
 
-        i += 1
-      end
-    else
-      p 'No condition given'
-    end
-  end
+  #       i += 1
+  #     end
+  #   else
+  #     p 'No condition given'
+  #   end
+  # end
 
-  def my_find_all(value = nil)
-    i = 0
+  def my_find_all
+    enum.find_all {| obj | block }  => array
     result = []
-    if !value.nil?
-      while i < size
-        result.append(self[i]) if self[i] == value
+    if block_given?
+      each do |item|
+        result << item if yield(item)
 
-        i += 1
-      end
-    elsif block_given?
-      while i < size
-        result.append(self[i]) if yield(self[i])
-
-        i += 1
       end
     else
-      p 'No condition given'
+      raise ArgumentError, 'Expected one parameter: block'
     end
     result
   end
