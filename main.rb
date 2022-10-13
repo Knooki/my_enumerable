@@ -42,7 +42,7 @@ puts 'my_each array2'
 puts 'enum'
 p array2.my_each
 puts "\n{|x| x=10}"
-p array2.my_each {|item| item = 10 }
+p array2.my_each { |_item| item = 10 }
 puts "\n"
 
 # puts 'my_map array2'

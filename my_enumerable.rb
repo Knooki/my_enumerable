@@ -81,7 +81,7 @@ module MyEnumerable
         result_arr << yield(item)
       end
     elsif !block_given?               # empty
-     return self.to_enum(:each)
+      return to_enum(:each)
     else
       raise ArgumentError, 'Expected one parameter: block'
     end
@@ -93,37 +93,35 @@ module MyEnumerable
     to_set.superset?(arr.to_set)
   end
 
-  def my_map!()
-    # map! {|item| block } → ary 
-    # map! → Enumerator 
+  def my_map!
+    # map! {|item| block } → ary
+    # map! → Enumerator
     result_arr = []
     if block_given? # {}
       each do |item|
         result_arr << yield(item)
       end
     else            # empty
-      return self.to_enum(:each)
+      to_enum(:each)
     end
   end
 
   def my_size
     # size → int
-    return size
+    size
   end
 
   def my_count(value = nil)
-    # count → int 
+    # count → int
     # count(obj) → int
-    # count {|item| block} → int 
+    # count {|item| block} → int
     if block_given? && value.nil?      # {}
       each do |item|
         count += 1 if yield(item)
-
       end
     elsif !value.nil? && !block_given? # ()
       each do |item|
         count += 1 if value == item
-
       end
     elsif value.nil? && !block_given?  # empty
       return size
@@ -140,15 +138,14 @@ module MyEnumerable
 
   def my_select
     # select {|item| block} → new_ary
-    # select → Enumerator 
+    # select → Enumerator
     result = []
     if block_given? # {}
       each do |item|
         result << item if yield(item)
-        
       end
     else            # empty
-      return self.to_enum(:each)
+      return to_enum(:each)
     end
     result
   end
@@ -178,7 +175,6 @@ module MyEnumerable
     if block_given? # {}
       each do |item|
         result << item if yield(item)
-
       end
     else            # empty
       raise ArgumentError, 'Expected one parameter: block'
@@ -194,57 +190,60 @@ module MyEnumerable
     if !obj.nil? && !block_given?   # ()
       each_with_index do |item, i|
         return i if obj == item
-
       end
     elsif block_given? && obj.nil?  # {}
       each_with_index do |item, i|
         return i if yield(item)
-
       end
     elsif !block_given? && obj.nil? # empty
-      return self.to_enum(:each)
+      return to_enum(:each)
     else
       raise ArgumentError, 'Expected one parameter: either obj, either block'
     end
-    return nil
+    nil
   end
 
-  def my_reject*()
+  def my_reject
     # reject {|item| block } → new_ary
-    # reject → Enumerator 
+    # reject → Enumerator
     result = self
     if block_given? # {}
       each_with_index do |item, i|
         result.delete_at(i) if yield(item)
-
       end
     else            # empty
-      return self.to_enum(:each)
+      return to_enum(:each)
     end
     result
   end
 
-  def my_min
-    min_el = self[0]
-    i = 1
-    while i < size
-      min_el = self[i] if min > self[i]
+  # def my_min(n = nil)
+  #   # min → obj
+  #   # min {| a,b | block } → obj
+  #   # min(n) → array
+  #   # min(n) {| a,b | block } → array
+  #   min_el = self[0]
+  #   min_array = []
+  #   if n.nil? && !block_given?
+  #     each do |item|
+  #       min_el = item if min_el > item
 
-      i += 1
-    end
-    min_el
-  end
+  #     end
+  #   elsif n.nil? && block_given?
 
-  def my_max
-    max_el = self[0]
-    i = 1
-    while i < size
-      max_el = self[i] if min < self[i]
+  #   min_el
+  # end
 
-      i += 1
-    end
-    max_el
-  end
+  # def my_max
+  #   max_el = self[0]
+  #   i = 1
+  #   while i < size
+  #     max_el = self[i] if min < self[i]
+
+  #     i += 1
+  #   end
+  #   max_el
+  # end
 end
 
 class Array
