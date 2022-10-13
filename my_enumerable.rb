@@ -80,9 +80,8 @@ module MyEnumerable
       each do |item|
         result_arr << yield(item)
       end
-    elsif !block_given?
-      result_arr=self               # empty
-     return result_arr.to_enum(:each)
+    elsif !block_given?               # empty
+     return self.to_enum(:each)
     else
       raise ArgumentError, 'Expected one parameter: block'
     end
@@ -94,23 +93,17 @@ module MyEnumerable
     to_set.superset?(arr.to_set)
   end
 
-  def my_map(value = nil)
-    i = 0
-    result = self
-    if !value.nil?
-      while i < size
-        result[i] = value
-        i += 1
-      end
-    elsif block_given?
-      while i < size
-        yield(result[i])
-        i += 1
+  def my_map!()
+    #map! {|item| block } → ary click to toggle source
+    #map! → Enumerator 
+    result_arr = []
+    if block_given?
+      each do |item|
+        result_arr << yield(self[i])
       end
     else
-      p 'No action given'
+      return self.to_enum(:each)
     end
-    result
   end
 
   def my_size
