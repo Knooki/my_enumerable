@@ -20,82 +20,73 @@ module MyEnumerable
       end
     when pattern.nil? && !block_given?  # empty
       each do |item|
-        return false unless item 
+        return false unless item
       end
-    else                               # () {}
-        raise StandardError.new 'Expected one parameter: either pattern, either block'
+    else # () {}
+      raise ArgumentError, 'Expected one parameter: either pattern, either block'
     end
     true
   end
 
-  def my_any?(value = nil)
-    i = 0
-    if !value.nil?
-      while i < size
-        return true if self[i] == value
-
-        i += 1
+  def my_any?(pattern = nil)
+    # any? [{|obj| block} ] → true or false
+    # any?(pattern) → true or false
+    case
+    when block_given? && pattern.nil?   # {}
+      each do |item|
+        return true if yield(item)
       end
-    elsif block_given?
-      while i < size
-        return true if yield(self[i])
-
-        i += 1
+    when !pattern.nil? && !block_given? # ()
+      each do |item|
+        return true if pattern === item
       end
-    else
-      while i < size
-        return true if self[i]
-
-        i += 1
+    when pattern.nil? && !block_given?  # empty
+      each do |item|
+        return true if item
       end
+    else # () {}
+      raise ArgumentError, 'Expected one parameter: either pattern, either block'
     end
     false
   end
 
-  def my_none?(value = nil)
-    i = 0
-    if !value.nil?
-      while i < size
-        return false if self[i] == value
-
-        i += 1
+  def my_none?(pattern = nil)
+    # none? [{|obj| block} ] → true or false
+    # none?(pattern) → true or false
+    case
+    when block_given? && pattern.nil?   # {}
+      each do |item|
+        return false if yield(item)
       end
-    elsif block_given?
-      while i < size
-        return false if yield(self[i])
-
-        i += 1
+    when !pattern.nil? && !block_given? # ()
+      each do |item|
+        return false if pattern === item
       end
-    else
-      while i < size
-        return false if self[i]
-
-        i += 1
+    when pattern.nil? && !block_given?  # empty
+      each do |item|
+        return false if item
       end
+    else # () {}
+      raise ArgumentError, 'Expected one parameter: either pattern, either block'
     end
     true
   end
 
-  def my_each(value = nil)
-    i = 0
-    if !value.nil?
-      while i < size
-        self[i] = value
-        i += 1
+  def my_each
+    # each {|item| block} → ary
+    # each → Enumerator
+    result_arr = []
+    if block_given?                   # {}
+      each do |item|
+        result_arr << yield(item)
       end
-      self
-    elsif block_given?
-      while i < size
-        yield(self[i])
-        i += 1
-      end
-      self
+    elsif !block_given?
+      result_arr=self               # empty
+     return result_arr.to_enum(:each)
     else
-      while i < size
-        p "Current number is #{self[i]}"
-        i += 1
-      end
+      raise ArgumentError, 'Expected one parameter: block'
     end
+    result_arr
   end
 
   def my_include?(arr)
