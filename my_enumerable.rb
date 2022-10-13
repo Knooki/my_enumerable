@@ -89,17 +89,17 @@ module MyEnumerable
   end
 
   def my_include?(arr)
-    #include?(object) → true or false
+    # include?(object) → true or false
     to_set.superset?(arr.to_set)
   end
 
   def my_map!()
-    #map! {|item| block } → ary click to toggle source
-    #map! → Enumerator 
+    # map! {|item| block } → ary click to toggle source
+    # map! → Enumerator 
     result_arr = []
     if block_given?
       each do |item|
-        result_arr << yield(self[i])
+        result_arr << yield(item)
       end
     else
       return self.to_enum(:each)
@@ -107,42 +107,48 @@ module MyEnumerable
   end
 
   def my_size
-    size
+    # size → int
+    return size
   end
 
   def my_count(value = nil)
-    count = value
-    i = 0
-    if block_given?
-      while i < size
-        count += 1 if yield(self[i])
+    # count → int click to toggle source
+    # count(obj) → int
+    # count {|item| block} → int 
+    if block_given? && value.nil?
+      each do |item|
+        count += 1 if yield(item)
 
-        i += 1
       end
-    elsif !value.nil?
-      while i < size
-        count += 1 if value == self[i]
+    elsif !value.nil? && !block_given?
+      each do |item|
+        count += 1 if value == item
 
-        i += 1
       end
-      count += value
-    else
+    elsif !value.nil? && !block_given?
       return size
+    else
+      raise ArgumentError, 'Expected one parameter: either object, either block'
     end
     count
   end
 
   def my_length
+    # length → int
     size
   end
 
   def my_select
-    i = 0
+    # select {|item| block} → new_ary
+    # select → Enumerator 
     result = []
     if block_given?
-      result.append(self[i]) if yield(self[i])
+      each do |item|
+        result << item if yield(item)
+        
+      end
     else
-      p 'No action given'
+      return self.to_enum(:each)
     end
     result
   end
