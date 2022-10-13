@@ -94,7 +94,7 @@ module MyEnumerable
   end
 
   def my_map!()
-    # map! {|item| block } → ary click to toggle source
+    # map! {|item| block } → ary 
     # map! → Enumerator 
     result_arr = []
     if block_given?
@@ -112,7 +112,7 @@ module MyEnumerable
   end
 
   def my_count(value = nil)
-    # count → int click to toggle source
+    # count → int 
     # count(obj) → int
     # count {|item| block} → int 
     if block_given? && value.nil?
@@ -173,7 +173,7 @@ module MyEnumerable
   # end
 
   def my_find_all
-    enum.find_all {| obj | block }  => array
+    # enum.find_all {| obj | block }  => array
     result = []
     if block_given?
       each do |item|
@@ -186,8 +186,10 @@ module MyEnumerable
     result
   end
 
-  def my_find_index(value = nil)
-    i = 0
+  def my_find_index(obj = nil)
+    # find_index(obj) → int or nil
+    # find_index {|item| block} → int or nil
+    # find_index → Enumerator 
     if !value.nil?
       while i < size
         return i if self[i] == value
