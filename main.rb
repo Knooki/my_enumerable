@@ -38,11 +38,13 @@ puts "\n"
 # p array1.my_none? { |n| n > 7 }
 # puts "\n"
 
+p array1.all?(5) { |x| x > 3 }
+
 puts 'my_each array2'
 puts 'enum'
 p array2.my_each
 puts "\n{|x| x=10}"
-p array2.my_each { |item| item = 10 }
+p array2.my_each { |_item| item = 10 }
 puts "\n"
 
 # puts 'my_map array2'
