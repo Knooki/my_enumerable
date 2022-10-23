@@ -11,6 +11,22 @@ puts 'array2:'
 p array2
 puts "\n"
 
+
+# puts 'any?'
+# p [].none?
+# p [].my_none?
+# p [].none? { |x| x > 4 }
+# p [].my_none? { |x| x > 4 }
+# p [].none?(Numeric)
+# p [].my_none?(Numeric)
+# p [].none?(Numeric) { |x| x > 4 }
+# p [].my_none?(Numeric) { |x| x > 4 }
+
+p [].count
+p [].my_count
+p [].count(3) {|x| x > 0}
+p [].my_count(3) {|x| x > 0}
+
 # all? any? include? none? each map size count length select find find_all find_index reject max min
 
 # puts 'all? array1'

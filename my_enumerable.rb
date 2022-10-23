@@ -9,7 +9,7 @@ module MyEnumerable
   def my_all?(pattern = nil)
     # all? [{|obj| block} ] → true or false
     # all?(pattern) → true or false
-    warn("given block not used\n", uplevel: 1) if !pattern.nil? && block_given?
+    warn("given block not used\n", uplevel: 1) if !pattern.nil? && block_given? && length > 0
     if !pattern.nil? # ()
       each { |item| return false unless pattern === item }
     elsif block_given? # {}
@@ -23,7 +23,7 @@ module MyEnumerable
   def my_any?(pattern = nil)
     # any? [{|obj| block} ] → true or false
     # any?(pattern) → true or false
-    warn("given block not used\n", uplevel: 1) if !pattern.nil? && block_given?
+    warn("given block not used\n", uplevel: 1) if !pattern.nil? && block_given? && length > 0
 
     if !pattern.nil? # ()
       each { |item| return true if pattern === item }
@@ -38,7 +38,7 @@ module MyEnumerable
   def my_none?(pattern = nil)
     # none? [{|obj| block} ] → true or false
     # none?(pattern) → true or false
-    warn("given block not used\n", uplevel: 1) if !pattern.nil? && block_given?
+    warn("given block not used\n", uplevel: 1) if !pattern.nil? && block_given? && length > 0
 
     if !pattern.nil? # ()
       each { |item| return false if pattern === item }
@@ -80,7 +80,9 @@ module MyEnumerable
 
   def my_size
     # size → int
-    size
+    count = 0
+    each {|x| count+=1}
+    count
   end
 
   def my_count(value = nil)
@@ -101,7 +103,9 @@ module MyEnumerable
 
   def my_length
     # length → int
-    size
+    count = 0
+    each {|x| count+=1}
+    count
   end
 
   def my_select
@@ -131,13 +135,12 @@ module MyEnumerable
     # find_index(obj) → int or nil
     # find_index {|item| block} → int or nil
     # find_index → Enumerator
+    return to_enum(:my_find_index) unless block_given? || !obj.nil?
     warn("given block not used\n", uplevel: 1) if !obj.nil? && block_given?
     if !obj.nil? # ()
       (1..size).each { |i| return i if self[i] == obj }
-    elsif block_given? # {}
+    else   # {}
       (1..size).each { |i| return i if yield(self[i]) }
-    else # empty
-      return to_enum(:my_find_index)
     end
     nil
   end
@@ -158,7 +161,7 @@ module MyEnumerable
     if amount.nil?
       min_el = self[0]
       if block_given?
-        each { |item| min_el = item if yield(item, min_el).negaite? }
+        each { |item| min_el = item if yield(item, min_el).negative? }
       else
         each { |item| min_el = item if item < min_el }
       end
